@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Run Tracker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="app-header">
+    <h1>Run Tracker</h1>
+    <p class="tagline">Log your runs, review your history, and analyze a run.</p>
+  </header>
+
+  <main class="layout">
+
+    <!-- ========== 1. LOG A RUN (form) ========== -->
+    <section class="card" id="log-section" aria-labelledby="log-heading">
+      <h2 id="log-heading">Log a Run</h2>
+
+      <form id="run-form" novalidate>
+        <div class="field">
+          <label for="run-date">Date</label>
+          <input type="date" id="run-date" name="date" required>
+          <span class="error" data-error-for="date" role="alert"></span>
+        </div>
+
+        <div class="field">
+          <label for="run-distance">Distance (miles)</label>
+          <input type="number" id="run-distance" name="distance" min="0" step="0.01" placeholder="e.g. 3.1" required>
+          <span class="error" data-error-for="distance" role="alert"></span>
+        </div>
+
+        <fieldset class="field time-field">
+          <legend>Time</legend>
+          <div class="time-inputs">
+            <label>
+              <input type="number" id="run-hours" name="hours" min="0" max="24" step="1" placeholder="0">
+              <span>hr</span>
+            </label>
+            <label>
+              <input type="number" id="run-minutes" name="minutes" min="0" max="59" step="1" placeholder="0">
+              <span>min</span>
+            </label>
+            <label>
+              <input type="number" id="run-seconds" name="seconds" min="0" max="59" step="1" placeholder="0">
+              <span>sec</span>
+            </label>
+          </div>
+          <span class="error" data-error-for="time" role="alert"></span>
+        </fieldset>
+
+        <div class="field">
+          <label for="run-type">Workout type</label>
+          <select id="run-type" name="type" required>
+            <option value="">Select a type...</option>
+            <option value="Easy">Easy</option>
+            <option value="Long Run">Long Run</option>
+            <option value="Tempo">Tempo</option>
+            <option value="Intervals">Intervals</option>
+            <option value="Recovery">Recovery</option>
+            <option value="Race">Race</option>
+          </select>
+          <span class="error" data-error-for="type" role="alert"></span>
+        </div>
+
+        <div class="field">
+          <label for="run-notes">Notes <span class="optional">(optional)</span></label>
+          <textarea id="run-notes" name="notes" rows="3" maxlength="200" placeholder="How did it feel?"></textarea>
+          <span class="char-count"><span id="notes-count">0</span>/200</span>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="save-btn">Save Run</button>
+        <p id="form-status" class="form-status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <!-- ========== 2. RUN HISTORY ========== -->
+    <section class="card" id="history-section" aria-labelledby="history-heading">
+      <div class="section-header">
+        <h2 id="history-heading">Run History</h2>
+        <span id="run-count" class="count-badge">0 runs</span>
+      </div>
+
+      <!-- Weekly goal bar: the goal lives in a data-* attribute, JS reads it and sets the fill width -->
+      <div class="goal" id="weekly-goal" data-goal-miles="15" data-met="false">
+        <div class="goal-label">
+          <span>Last 7 days</span>
+          <span id="weekly-goal-text">0 / 15 mi</span>
+        </div>
+        <div class="progress" role="progressbar" aria-label="Weekly mileage goal"
+             aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div class="progress-fill" id="weekly-goal-fill"></div>
+        </div>
+      </div>
+
+      <p id="empty-state" class="empty-state">No runs yet. Log your first run to get started.</p>
+      <ul id="run-list" class="run-list" data-run-count="0" aria-label="Previous runs"></ul>
+    </section>
+
+    <!-- ========== 3. ANALYZE RUN ========== -->
+    <section class="card" id="analysis-panel" data-state="idle" aria-labelledby="analysis-heading">
+      <h2 id="analysis-heading">Analyze Run</h2>
+
+      <p id="analysis-placeholder" class="placeholder">Select a run from your history to analyze it.</p>
+
+      <dl id="selected-run-details" class="details" hidden>
+        <div><dt>Date</dt><dd id="detail-date"></dd></div>
+        <div><dt>Distance</dt><dd id="detail-distance"></dd></div>
+        <div><dt>Time</dt><dd id="detail-time"></dd></div>
+        <div><dt>Pace</dt><dd id="detail-pace"></dd></div>
+        <div><dt>Type</dt><dd id="detail-type"></dd></div>
+      </dl>
+
+      <button type="button" class="btn btn-accent" id="analyze-btn" disabled>Analyze Run</button>
+
+      <div id="analysis-output" class="analysis-output" aria-live="polite"></div>
+      <p class="disclaimer">Sprint 1 note: this summary is generated locally in JavaScript. A real AI call comes in a later sprint.</p>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

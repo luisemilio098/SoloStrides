@@ -1,0 +1,297 @@
+/* ---------- Design tokens ---------- */
+:root {
+  --bg: #f3f5f9;
+  --surface: #ffffff;
+  --text: #1c2333;
+  --muted: #667085;
+  --border: #d8dde6;
+  --primary: #2f6fed;
+  --primary-dark: #1f56c4;
+  --accent: #7a3ff2;
+  --danger: #c93a3a;
+  --success: #1f8a4c;
+  --radius: 12px;
+  --shadow: 0 2px 8px rgba(20, 30, 60, 0.08);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+h1, h2 { margin: 0; }
+h2 { font-size: 1.15rem; }
+
+/* ---------- Header ---------- */
+.app-header {
+  padding: 24px 16px 8px;
+  text-align: center;
+}
+.app-header h1 { font-size: 1.8rem; }
+.tagline { margin: 4px 0 0; color: var(--muted); }
+
+/* ---------- Page layout (CSS Grid) ----------
+   Mobile first: one column. Wider screens: form + analysis on the left, history on the right. */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+@media (min-width: 900px) {
+  .layout {
+    grid-template-columns: 360px 1fr;
+    grid-template-areas:
+      "log     history"
+      "analysis history";
+    align-items: start;
+  }
+  #log-section     { grid-area: log; }
+  #history-section { grid-area: history; }
+  #analysis-panel  { grid-area: analysis; }
+}
+
+/* ---------- Cards ---------- */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+.card h2 { margin-bottom: 14px; }
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.section-header h2 { margin-bottom: 0; }
+
+.count-badge {
+  background: var(--bg);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 2px 12px;
+  font-size: 0.85rem;
+}
+
+/* ---------- Form ---------- */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0 0 14px;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+label, legend {
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0;
+}
+.optional { font-weight: 400; color: var(--muted); }
+
+input, select, textarea {
+  font: inherit;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--text);
+  width: 100%;
+}
+input:focus, select:focus, textarea:focus, .btn:focus-visible, .run-card:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+input[aria-invalid="true"], select[aria-invalid="true"] {
+  border-color: var(--danger);
+}
+textarea { resize: vertical; }
+
+.time-inputs { display: flex; gap: 8px; }
+.time-inputs label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.error { color: var(--danger); font-size: 0.82rem; min-height: 1em; }
+.char-count { align-self: flex-end; color: var(--muted); font-size: 0.8rem; }
+
+.form-status { margin: 8px 0 0; color: var(--success); font-weight: 600; min-height: 1.4em; }
+
+/* ---------- Buttons ---------- */
+.btn {
+  font: inherit;
+  font-weight: 600;
+  border: 0;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  color: #fff;
+  width: 100%;
+  transition: background 0.15s, opacity 0.15s;
+}
+.btn-primary { background: var(--primary); }
+.btn-primary:hover { background: var(--primary-dark); }
+.btn-accent { background: var(--accent); margin-top: 12px; }
+.btn-accent:hover:not(:disabled) { filter: brightness(0.9); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* ---------- Weekly goal progress bar ---------- */
+.goal { margin-bottom: 16px; }
+.goal-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.progress {
+  height: 10px;
+  background: var(--bg);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  width: 0;
+  background: var(--primary);
+  border-radius: 999px;
+  transition: width 0.4s ease, background 0.3s;
+}
+.goal[data-met="true"] .progress-fill { background: var(--success); }
+
+/* ---------- Run list ---------- */
+.empty-state, .placeholder { color: var(--muted); }
+
+.run-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.run-card {
+  position: relative;
+  border: 2px solid var(--border);
+  border-left-width: 6px;
+  border-radius: 10px;
+  padding: 12px 44px 12px 14px;
+  cursor: pointer;
+  background: var(--surface);
+  transition: box-shadow 0.15s, border-color 0.15s;
+}
+.run-card:hover { box-shadow: var(--shadow); }
+.run-card[data-selected="true"] {
+  border-color: var(--primary);
+  background: #f0f5ff;
+}
+
+/* Left border color per workout type (driven by the data-type attribute) */
+.run-card[data-type="easy"]      { border-left-color: #3fa66b; }
+.run-card[data-type="long-run"]  { border-left-color: #2f6fed; }
+.run-card[data-type="tempo"]     { border-left-color: #e08a1e; }
+.run-card[data-type="intervals"] { border-left-color: #d6403f; }
+.run-card[data-type="recovery"]  { border-left-color: #8a94a6; }
+.run-card[data-type="race"]      { border-left-color: #7a3ff2; }
+.run-card[data-selected="true"]  { border-left-color: var(--primary); }
+
+.run-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.run-date { font-weight: 600; }
+
+.type-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--muted);
+  white-space: nowrap;
+}
+.run-card[data-type="easy"] .type-badge      { background: #3fa66b; }
+.run-card[data-type="long-run"] .type-badge  { background: #2f6fed; }
+.run-card[data-type="tempo"] .type-badge     { background: #e08a1e; }
+.run-card[data-type="intervals"] .type-badge { background: #d6403f; }
+.run-card[data-type="recovery"] .type-badge  { background: #8a94a6; }
+.run-card[data-type="race"] .type-badge      { background: #7a3ff2; }
+
+.run-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  font-size: 0.92rem;
+}
+.run-stats span { color: var(--muted); }
+.run-stats strong { color: var(--text); }
+
+.run-notes {
+  margin: 6px 0 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+  font-style: italic;
+  overflow-wrap: anywhere;
+}
+
+.delete-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.delete-btn:hover { background: #fdeaea; color: var(--danger); }
+
+/* ---------- Analysis panel ---------- */
+.details {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px 16px;
+  margin: 0;
+}
+.details[hidden] { display: none; }
+.details dt { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.03em; }
+.details dd { margin: 0; font-weight: 600; }
+
+.analysis-output { margin-top: 14px; }
+.analysis-output p { margin: 0 0 8px; }
+.analysis-output:empty { margin-top: 0; }
+
+#analysis-panel[data-state="loading"] .analysis-output { color: var(--muted); font-style: italic; }
+#analysis-panel[data-state="done"] .analysis-output {
+  background: #f6f1ff;
+  border-left: 4px solid var(--accent);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+
+.disclaimer { margin: 12px 0 0; font-size: 0.78rem; color: var(--muted); }
